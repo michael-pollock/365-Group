@@ -1,7 +1,7 @@
 # 365-Group
 CS365 Group Project
 
-To start:
+    To start:
 
     Make sure Node.js is installed on your system,
     on WSL or Linux you would install linux like this 
@@ -23,9 +23,7 @@ To start:
         npm --version 
         node --version
 
-
-
-To install dependencies
-    express npm install express
-    socket.io npm install socket.io
+    To install dependencies
+        express npm install express
+        socket.io npm install socket.io
 
