@@ -24,6 +24,8 @@ If all of this fails then we can download the latest version Linux 64 bit binari
         npm --version 
         node --version
 
+
+
 To install dependencies
     express npm install express
     socket.io npm install socket.io
