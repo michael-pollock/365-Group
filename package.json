@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/michael-pollock/365-Group/issues"
   },
-  "homepage": "https://github.com/michael-pollock/365-Group#readme"
+  "homepage": "https://github.com/michael-pollock/365-Group#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
