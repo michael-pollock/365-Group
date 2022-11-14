@@ -6,12 +6,12 @@
   "name": "365-group",
   "description": "CS365 Group Project",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server/server.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "dev": "nodemon src/server.js",
+    "dev": "nodemon server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
