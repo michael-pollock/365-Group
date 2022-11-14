@@ -13,8 +13,7 @@ To check run
 If you encounter errors when installing try the following commands, 
     sudo apt update && sudo apt upgrade
 
-If all of this fails then we can download the latest version Linux 64 bit binaries
-    [WSL]
+    If all of this fails then we can download the latest version Linux 64 bit binaries
         wget https://nodejs.org/dist/v18.12.1/node-v18.12.1-linux-x64.tar.xz
         tar -xf node-v18.12.1-linux-x64.tar.xz
         rm node-v18.12.1-linux-x64.tar.xz
