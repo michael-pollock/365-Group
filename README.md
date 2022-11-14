@@ -26,4 +26,5 @@ CS365 Group Project
     To install dependencies
         express npm install express
         socket.io npm install socket.io
+        nodemon npm install --save-dev nodemon
 
