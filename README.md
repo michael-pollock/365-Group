@@ -28,3 +28,5 @@ CS365 Group Project
         socket.io npm install socket.io
         nodemon npm install --save-dev nodemon
 
+    To run the server
+        npm run dev
