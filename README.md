@@ -27,6 +27,8 @@ CS365 Group Project
         express npm install express
         socket.io npm install socket.io
         nodemon npm install --save-dev nodemon
+        dotenv npm install dotenv --save
+
 
     To run the server
         npm run dev
