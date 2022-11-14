@@ -9,7 +9,7 @@ require("dotenv").config();
 
 app.use(express.static("client"));
 
-app.get("/", (req, res) => {
+app.get("/", (request, response) => {
   res.send("Hello World!");
 });
 
