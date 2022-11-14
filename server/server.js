@@ -1,0 +1,4 @@
+/*
+    Blank server javascript file
+
+*/
