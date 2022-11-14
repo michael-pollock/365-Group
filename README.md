@@ -4,7 +4,7 @@ CS365 Group Project
     To start:
 
     Make sure Node.js is installed on your system,
-    on WSL or Linux you would install linux like this 
+    on WSL or Linux you would install Nodejs like this 
         sudo apt-get install nodejs
     To check run 
         npm --version 
