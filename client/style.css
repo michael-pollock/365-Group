@@ -7,3 +7,26 @@
 body {
     background: #617d8a;
 }
+
+td {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    border: 2px solid #152C59;
+    border-radius: 15px;
+}
+
+td div {
+    width: 70px;
+    height: 70px;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 3px;
+    margin: 0 auto;
+}
+
+td:hover {
+    background: #538daa;
+}
