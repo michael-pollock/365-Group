@@ -6,6 +6,8 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 const PORT = process.env.PORT || 4876;
 
+require("dotenv").config();
+
 app.use(express.static("client"));
 
 app.get("/", (req, res) => {
