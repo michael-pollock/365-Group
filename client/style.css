@@ -1,32 +1,36 @@
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 body {
-    background: #617d8a;
+  background: #617d8a;
 }
 
 td {
-    position: relative;
-    width: 70px;
-    height: 70px;
-    border: 2px solid #152C59;
-    border-radius: 15px;
+  position: relative;
+  width: 70px;
+  height: 70px;
+  border: 2px solid #152c59;
+  border-radius: 15px;
 }
 
 td div {
-    width: 70px;
-    height: 70px;
+  width: 70px;
+  height: 70px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  vertical-align: middle;
 }
 
 table {
-    border-collapse: separate;
-    border-spacing: 3px;
-    margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 3px;
+  margin: 0 auto;
 }
 
 td:hover {
-    background: #538daa;
+  background: #538daa;
 }

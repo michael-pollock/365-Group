@@ -7,10 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ship Sink</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 
 <body>
-  <div id="board">
+  <div id="app">
+    <div id="board">
     <div id="messageArea"></div>
     <table>
       <tr>
@@ -27,10 +29,10 @@
       <tr>
         <th class="letters">A</th>
         <td>
-          <div id="00"></div>
+          <div id="00">{{message}}</div>
         </td>
         <td>
-          <div id="01"></div>
+          <div id="01">{{message}}</div>
         </td>
         <td>
           <div id="02"></div>
@@ -194,6 +196,9 @@
       </tr>
     </table>
   </div>
+  </div>
+  
+  <script src="client.js"></script>
 </body>
 
 </html>
