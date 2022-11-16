@@ -1,3 +1,12 @@
+// Todo: 
+// create xIndex and yIndex arrays. Create functions to 
+// initialize them on startup
+// look into grid thing
+// figure out when to grab xIndex and yIndex value to display in grid
+// fill rest with array
+// On second thought keep indicies in array
+// that way we can map array to grid easier
+
 const { createApp } = Vue;
 
 createApp({

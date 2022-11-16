@@ -1,23 +1,34 @@
+// Todo:
+// create xIndex and yIndex arrays. Create functions to
+// initialize them on startup
+// look into grid thing
+// figure out when to grab xIndex and yIndex value to display in grid
+// fill rest with array
+// On second thought keep indicies in array
+// that way we can map array to grid easier
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ship Sink</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-  </head>
 
-  <body>
-    <div id="app">
-      <div id="board" v-for="row in board">
-        {{boardHeader}}
-        <div v-for="column in row">{{column}}</div>
-        <div id="messageArea"></div>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ship Sink</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div id="board" v-for="row in board">
+      <!-- {{boardHeader}} -->
+      <div v-for="column in row">{{column}}</div>
+      <div id="messageArea"></div>
     </div>
+  </div>
 
-    <script src="client.js"></script>
-  </body>
+  <script src="client.js"></script>
+</body>
+
 </html>
