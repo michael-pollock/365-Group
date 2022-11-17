@@ -1,5 +1,5 @@
-// Todo: 
-// create xIndex and yIndex arrays. Create functions to 
+// Todo:
+// create xIndex and yIndex arrays. Create functions to
 // initialize them on startup
 // look into grid thing
 // figure out when to grab xIndex and yIndex value to display in grid
