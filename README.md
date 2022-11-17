@@ -25,10 +25,10 @@ CS365 Group Project
         node --version
 
     To install dependencies
-        express npm install express
-        socket.io npm install socket.io
-        nodemon npm install --save-dev nodemon
-        dotenv npm install dotenv --save
+        npm install express
+        npm install socket.io
+        npm install --save-dev nodemon
+        npm install dotenv --save
 
 
     To run the server

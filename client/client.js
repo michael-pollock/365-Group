@@ -6,6 +6,7 @@
 // fill rest with array
 // On second thought keep indicies in array
 // that way we can map array to grid easier
+// Chat functions
 
 const { createApp } = Vue;
 
