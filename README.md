@@ -45,3 +45,5 @@ CS365 Group Project
         git checkout "your_branch_name"
     To push from separate branch in git
         git push --set-upstream origin "your_branch_name_here"
+    To check what branch you are in and list branches
+        git branch --list
