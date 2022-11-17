@@ -1,16 +1,17 @@
 # 365-Group
+
 CS365 Group Project
 
     To start:
 
     Make sure Node.js is installed on your system,
-    on WSL or Linux you would install Nodejs like this 
+    on WSL or Linux you would install Nodejs like this
         sudo apt-get install nodejs
-    To check run 
-        npm --version 
+    To check run
+        npm --version
         node --version
 
-    If you encounter errors when installing try the following commands, 
+    If you encounter errors when installing try the following commands,
         sudo apt update && sudo apt upgrade
 
     If all of this fails then we can download the latest version Linux 64 bit binaries
@@ -19,8 +20,8 @@ CS365 Group Project
         rm node-v18.12.1-linux-x64.tar.xz
         sudo cp -r ./* /usr/local/ # make sure that you are in the ~/node-v18.12.1-linux-x64
 
-    To check run 
-        npm --version 
+    To check run
+        npm --version
         node --version
 
     To install dependencies
@@ -32,3 +33,8 @@ CS365 Group Project
 
     To run the server
         npm run dev
+    or
+        nodemon server/server.js
+
+    To push from separate branch in git
+        git push origin branch1:branch2
