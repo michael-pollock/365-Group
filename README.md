@@ -36,5 +36,12 @@ CS365 Group Project
     or
         nodemon server/server.js
 
+    To ensure no conflicts in code i.e. overwriting someone elses code we must each have
+    a separate branch aside from main one follow steps below
+
+    To create a branch
+        git checkout -b "your_new_branch_name"
+    To switch between branches
+        git checkout "your_branch_name"
     To push from separate branch in git
-        git push origin branch1:branch2
+        git push --set-upstream origin "your_branch_name_here"
