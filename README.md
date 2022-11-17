@@ -35,6 +35,11 @@ CS365 Group Project
         npm run dev
     or
         nodemon server/server.js
+    If having issues with the server running and receiving the error message
+    that the address is already in use run these commands below
+        netstat -ltnp
+    find the process with the pid running on port 4876 then run this command to kill the process
+        kill -9 "pid_number"
 
     To ensure no conflicts in code i.e. overwriting someone elses code we must each have
     a separate branch aside from main one follow steps below
