@@ -12,9 +12,6 @@
 
   <body>
     <div id="app">
-      <div id="board" v-for="row in board">
-        <div v-for="column in row">{{column}}</div>
-      </div>
       <div id="message-area">
         <h2>Chat Box</h2>
         <label for="user-input">Send Message:</label>
@@ -23,6 +20,13 @@
           <h3>Logged in as {{userId}}</h3>
           <p id="userchatbox" v-for="user in usersList">{{user}}</p>
         </div>
+            <div class="container">
+      <div id="board" v-for="row in board" class="row">
+        <div v-for="col in row" class="col">
+          {{col}}
+        </div>
+      </div>
+    </div>
       </div>
     </div>
 
