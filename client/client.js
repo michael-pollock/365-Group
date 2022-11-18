@@ -13,32 +13,47 @@ createApp({
   data() {
     return {
       message: "Hello Vue!",
-      size: 6,
-      board: [[], []],
-      boardHeader: "A B C D E F G",
+      rows: 9,
+      cols: 6,
+      board: []
     };
   },
   methods: {
     fillBoard() {
-      let xIndex = 0;
-      let yIndex = 0;
-      let i = 0;
-      let j = 0;
-      for (i; i <= this.size; i++) {
-        for (j; j <= this.size; j++) {
+      let xIndex = 1;
+      let yIndex = 'A';
+      for (i = 0; i <= this.rows; i++) {
+        for (j = 0; j <= this.cols; j++) {
           if (i == 0 && j > 0) {
+            console.log("xIndex: Put " + xIndex)
             this.board[i][j] = xIndex;
+            xIndex++;
           }
-          if (i !== 0 && j == 0) {
+          if (i > 0 && j == 0) {
+            console.log("yIndex: Put " + yIndex)
             this.board[i][j] = yIndex;
+            yIndex = this.getNextChar(yIndex);
           }
-          xIndex++;
+
         }
-        yIndex++;
       }
     },
+    initBoard() {
+      let board = [];
+      for (i = 0; i <= this.rows; i++) {
+        board.push([]);
+        for (j = 0; j <= this.cols; j++) {
+          board[i].push("~");
+        }
+      }
+      this.board = board;
+      this.fillBoard();
+    },
+    getNextChar(char) {
+      return String.fromCharCode(char.charCodeAt(0) + 1);
+    }
   },
   mounted() {
-    this.fillBoard();
+    this.initBoard();
   },
 }).mount("#app");
