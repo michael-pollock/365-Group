@@ -25,16 +25,21 @@ CS365 Group Project
         node --version
 
     To install dependencies
-        express npm install express
-        socket.io npm install socket.io
-        nodemon npm install --save-dev nodemon
-        dotenv npm install dotenv --save
+        npm install express
+        npm install socket.io
+        npm install --save-dev nodemon
+        npm install dotenv --save
 
 
     To run the server
         npm run dev
     or
         nodemon server/server.js
+    If having issues with the server running and receiving the error message
+    that the address is already in use run these commands below
+        netstat -ltnp
+    find the process with the pid running on port 4876 then run this command to kill the process
+        kill -9 "pid_number"
 
     To ensure no conflicts in code i.e. overwriting someone elses code we must each have
     a separate branch aside from main one follow steps below
@@ -45,3 +50,5 @@ CS365 Group Project
         git checkout "your_branch_name"
     To push from separate branch in git
         git push --set-upstream origin "your_branch_name_here"
+    To check what branch you are in and list branches
+        git branch --list

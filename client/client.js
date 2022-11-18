@@ -6,6 +6,9 @@
 // fill rest with array
 // On second thought keep indicies in array
 // that way we can map array to grid easier
+// Chat functions
+
+var socket = io();
 
 const { createApp } = Vue;
 
@@ -16,6 +19,8 @@ createApp({
       rows: 9,
       cols: 6,
       board: []
+      userId: null,
+      usersList: null,
     };
   },
   methods: {
@@ -51,9 +56,17 @@ createApp({
     },
     getNextChar(char) {
       return String.fromCharCode(char.charCodeAt(0) + 1);
-    }
+    },
   },
   mounted() {
     this.initBoard();
+    socket.on("sendUserId", dataFromServer => {
+      console.log(dataFromServer);
+      this.userId = dataFromServer;
+    });
+    socket.on("sendUsersList", dataFromServer => {
+      console.log(dataFromServer);
+      this.usersList = dataFromServer;
+    });
   },
 }).mount("#app");
