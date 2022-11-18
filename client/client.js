@@ -8,6 +8,8 @@
 // that way we can map array to grid easier
 // Chat functions
 
+var socket = io();
+
 const { createApp } = Vue;
 
 createApp({
@@ -16,7 +18,8 @@ createApp({
       message: "Hello Vue!",
       size: 6,
       board: [[], []],
-      boardHeader: "A B C D E F G",
+      userId: null,
+      usersList: null,
     };
   },
   methods: {
@@ -40,6 +43,14 @@ createApp({
     },
   },
   mounted() {
-    this.fillBoard();
+    //this.fillBoard();
+    socket.on("sendUserId", dataFromServer => {
+      console.log(dataFromServer);
+      this.userId = dataFromServer;
+    });
+    socket.on("sendUsersList", dataFromServer => {
+      console.log(dataFromServer);
+      this.usersList = dataFromServer;
+    });
   },
 }).mount("#app");
