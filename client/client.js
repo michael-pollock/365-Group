@@ -18,7 +18,7 @@ createApp({
       message: "Hello Vue!",
       rows: 9,
       cols: 6,
-      board: []
+      board: [],
       userId: null,
       usersList: null,
     };
