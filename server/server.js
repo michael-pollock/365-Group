@@ -4,9 +4,7 @@ const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const PORT = process.env.PORT || 4876;
-
-require("dotenv").config();
+const PORT = 4876;
 
 app.use(express.static("client"));
 
