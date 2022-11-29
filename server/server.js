@@ -4,7 +4,26 @@ const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const PORT = 4876;
+const PORT = process.env.PORT || 4876;
+
+const users = {}
+
+io.on('connection', socket => {
+  socket.on('new-user', name => {
+    users[socket.id] = name
+    socket.broadcast.emit('user-connected', name)
+  })
+  socket.on('send-chat-message', message => {
+    socket.broadcast.emit('chat-message', { message: message, name: users[socket.id] })
+  })
+  socket.on('disconnect', () => {
+    socket.broadcast.emit('user-disconnected', users[socket.id])
+    delete users[socket.id]
+  })
+})
+
+
+require("dotenv").config();
 
 app.use(express.static("client"));
 
@@ -12,34 +31,7 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
-let users = {};
-
-function updateUserList() {
-  let ret = [];
-  for (i in users) ret.push(users[i]);
-  return ret;
-}
-
-function randomUserId() {
-  return Math.floor(Math.random() * 100);
-}
-
-io.on("connection", function (socket) {
-  socket.on("disconnect", function () {
-    console.log(users[socket.id].userId + " disconnected.");
-    delete users[socket.id];
-    io.emit("sendUsersList", updateUserList());
-  });
-
-  users[socket.id] = {
-    userId: randomUserId(),
-  };
-
-  console.log(users[socket.id] + " connected with id " + socket.id);
-  socket.emit("sendUserId", users[socket.id].userId);
-  io.emit("sendUsersList", updateUserList()); //io.emit() broadcasts to all sockets that are connected!
-});
-
 server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
+
