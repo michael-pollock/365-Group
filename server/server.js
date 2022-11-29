@@ -14,17 +14,12 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
+let numOfClients = 0;
 let users = {};
-
-function updateUserList() {
-  let ret = [];
-  for (i in users) ret.push(users[i]);
-  return ret;
-}
-
-function randomUserId() {
-  return Math.floor(Math.random() * 100);
-}
+let player1Ships = [];
+let player1Board = [];
+let player2Ships = [];
+let player2Board = [];
 
 io.on("connection", function (socket) {
   socket.on("disconnect", function () {
@@ -45,3 +40,13 @@ io.on("connection", function (socket) {
 server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
+
+function updateUserList() {
+  let ret = [];
+  for (i in users) ret.push(users[i]);
+  return ret;
+}
+
+function randomUserId() {
+  return Math.floor(Math.random() * 100);
+}
