@@ -6,7 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ship Sink</title>
-  <link rel="stylesheet" href="style.css" />
+  <script defer src="client.js"></script>
+  <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -29,14 +30,35 @@
       </div>
     </div>
     <div class="container">
-      <div id="board" v-for="row in board" class="row">
-        <div v-for="col in row" class="col">
-          {{col}}
+      {{taunt}}
+      <div v-if="allShipsPlaced == true">
+        <button @click="setReady">Ready</button>
+      </div>
+      <div id="board" v-for="(row, rowIndex) in board" class="row">
+        <div v-for="(col, colIndex) in row" class="col">
+          <div v-if="col === '~'">
+            <button @click="placeShip(rowIndex, colIndex)"> O </button>
+          </div>
+          <div v-else>
+            {{col}}
+          </div>
+
         </div>
       </div>
+      <div class="col">
+        <p>Selected Ship: {{selectedShip.type}}, {{selectedShip.name}} </p>
+        <p>Ship orientation: {{shipOrientation}}</p>
+        <p>Placed: {{selectedShip.placed}}</p>
+        <p>All ships placed: {{allShipsPlaced}}</p>
+      </div>
+      <div class="col">
+        <button @click="prevShip">Previous Ship</button>
+        <button @click="nextShip">Next Ship</button>
+        <button @click="rotateShip">Rotate</button>
+        <button @click="removeShip">Remove</button>
+      </div>
     </div>
-
-    <script src="client.js"></script>
+  </div>
 </body>
 
 </html>
