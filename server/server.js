@@ -12,7 +12,6 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
-
 let numOfClients = 0;
 let users = {};
 let player1Ships = [];
@@ -40,7 +39,6 @@ server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
 
-
 function updateUserList() {
   let ret = [];
   for (i in users) ret.push(users[i]);
@@ -51,3 +49,8 @@ function randomUserId() {
   return Math.floor(Math.random() * 100);
 }
 
+function addUserList() {
+  let ret = [];
+  for (i in users) ret.push(users[i]);
+  return ret;
+}
