@@ -1,39 +1,6 @@
-const socket = io('http://127.0.0.1:4876/')
-const messageContainer = document.getElementById('message-container')
-const messageForm = document.getElementById('send-container')
-const messageInput = document.getElementById('message-input')
-
-const name = prompt('What is your name?')
-appendMessage('You joined')
-socket.emit('new-user', name)
-
-socket.on('chat-message', data => {
-  appendMessage(`${data.name}: ${data.message}`)
-})
-
-socket.on('user-connected', name => {
-  appendMessage(`${name} connected`)
-})
-
-socket.on('user-disconnected', name => {
-  appendMessage(`${name} disconnected`)
-})
-
-messageForm.addEventListener('submit', e => {
-  e.preventDefault()
-  const message = messageInput.value
-  appendMessage(`You: ${message}`)
-  socket.emit('send-chat-message', message)
-  messageInput.value = ''
-})
-
-function appendMessage(message) {
-  const messageElement = document.createElement('div')
-  messageElement.innerText = message
-  messageContainer.append(messageElement)
-}
-
 const { createApp } = Vue;
+
+var socket = io();
 
 createApp({
   data() {
@@ -45,11 +12,51 @@ createApp({
       fireBoard: [],
       userId: null,
       usersList: null,
-      carrier: { type: "Carrier", name: "Big-Hoss", id: "ca", size: 5, placed: false, sunk: false, hitCount: 0 },
-      battleship: { type: "Battleship", name: "BS-Baby", id: "bs", size: 4, placed: false, sunk: false, hitCount: 0 },
-      cruiser: { type: "Cruiser", name: "Bruise-Cruise", id: "cr", size: 3, placed: false, sunk: false, hitCount: 0 },
-      submarine: { type: "Submarine", name: "Silent-Whale", id: "sb", size: 3, placed: false, sunk: false, hitCount: 0 },
-      destroyer: { type: "Destroyer", name: "Openheimer", id: "dr", size: 2, placed: false, sunk: false, hitCount: 0 }, //openheimer said i am become death destroyer of worlds
+      carrier: {
+        type: "Carrier",
+        name: "Big-Hoss",
+        id: "ca",
+        size: 5,
+        placed: false,
+        sunk: false,
+        hitCount: 0,
+      },
+      battleship: {
+        type: "Battleship",
+        name: "BS-Baby",
+        id: "bs",
+        size: 4,
+        placed: false,
+        sunk: false,
+        hitCount: 0,
+      },
+      cruiser: {
+        type: "Cruiser",
+        name: "Bruise-Cruise",
+        id: "cr",
+        size: 3,
+        placed: false,
+        sunk: false,
+        hitCount: 0,
+      },
+      submarine: {
+        type: "Submarine",
+        name: "Silent-Whale",
+        id: "sb",
+        size: 3,
+        placed: false,
+        sunk: false,
+        hitCount: 0,
+      },
+      destroyer: {
+        type: "Destroyer",
+        name: "Openheimer",
+        id: "dr",
+        size: 2,
+        placed: false,
+        sunk: false,
+        hitCount: 0,
+      }, //openheimer said i am become death destroyer of worlds
       shipArray: [],
       selectedShip: "",
       shipIndex: 0,
@@ -63,7 +70,7 @@ createApp({
   methods: {
     fillBoard() {
       let xIndex = 1;
-      let yIndex = 'A';
+      let yIndex = "A";
       for (i = 0; i <= this.rows; i++) {
         for (j = 0; j <= this.cols; j++) {
           if (i == 0 && j > 0) {
@@ -76,7 +83,6 @@ createApp({
             this.fireBoard[i][j] = yIndex;
             yIndex = this.getNextChar(yIndex);
           }
-
         }
       }
     },
@@ -91,8 +97,8 @@ createApp({
           board2[i].push("~");
         }
       }
-      board1[0][0] = ' ';
-      board2[0][0] = ' ';
+      board1[0][0] = " ";
+      board2[0][0] = " ";
       this.shipBoard = board1;
       this.fireBoard = board2;
       this.fillBoard();
@@ -101,7 +107,13 @@ createApp({
       return String.fromCharCode(char.charCodeAt(0) + 1);
     },
     initShipArray() {
-      this.shipArray = [this.carrier, this.battleship, this.cruiser, this.submarine, this.destroyer];
+      this.shipArray = [
+        this.carrier,
+        this.battleship,
+        this.cruiser,
+        this.submarine,
+        this.destroyer,
+      ];
       this.selectedShip = this.shipArray[this.shipIndex];
     },
     nextShip() {
@@ -109,14 +121,15 @@ createApp({
       this.selectedShip = this.shipArray[this.shipIndex];
     },
     prevShip() {
-      this.shipIndex = (this.shipIndex - 1 + this.shipArray.length) % this.shipArray.length; // prevents negative numbers
+      this.shipIndex =
+        (this.shipIndex - 1 + this.shipArray.length) % this.shipArray.length; // prevents negative numbers
       this.selectedShip = this.shipArray[this.shipIndex];
     },
     rotateShip() {
       if (this.shipOrientation == "vertical") {
         this.shipOrientation = "horizontal";
       } else {
-        this.shipOrientation = "vertical"
+        this.shipOrientation = "vertical";
       }
     },
     placeShip(rowIndex, colIndex) {
@@ -174,7 +187,7 @@ createApp({
     },
     placeShip(rowIndex, colIndex) {
       if (this.selectedShip.placed == true) {
-        this.removeShip(); // remove ship from current location and put in new location. 
+        this.removeShip(); // remove ship from current location and put in new location.
       }
       if (this.shipOrientation == "vertical") {
         for (i = 0; i < this.selectedShip.size; i++) {
@@ -213,33 +226,34 @@ createApp({
         }
       }
       this.allShipsPlaced = true;
-      this.taunt = "You have placed all of your pieces. If they are where you want them, select 'Ready'";
+      this.taunt =
+        "You have placed all of your pieces. If they are where you want them, select 'Ready'";
     },
     setReady() {
-      console.log("Tell the server I am ready. Currently, manually setting game to begin.");
+      console.log(
+        "Tell the server I am ready. Currently, manually setting game to begin."
+      );
       this.playerReady = true;
-      this.gameBegin = true; // this should be updated by server, just here for testing currently. 
-      socket.emit("ready", this.shipBoard, this.shipArray)
+      this.gameBegin = true; // this should be updated by server, just here for testing currently.
+      socket.emit("ready", this.shipBoard, this.shipArray);
     },
     fireTorpedo(rowIndex, colIndex) {
       console.log("Torpedo fired at row " + rowIndex + ", col " + colIndex);
-    }
+    },
   },
   mounted() {
     this.initShipArray();
     this.initBoard();
-    socket.on("sendUserId", dataFromServer => {
+    socket.on("sendUserId", (dataFromServer) => {
       console.log(dataFromServer);
       this.userId = dataFromServer;
     });
-    socket.on("sendUsersList", dataFromServer => {
+    socket.on("sendUsersList", (dataFromServer) => {
       console.log(dataFromServer);
       this.usersList = dataFromServer;
     });
   },
   computed: {
-    findHitShip() {
-
-    }
-  }
+    findHitShip() {},
+  },
 }).mount("#app");
