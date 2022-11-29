@@ -34,7 +34,7 @@
       <div v-if="allShipsPlaced == true">
         <button @click="setReady">Ready</button>
       </div>
-      <div id="board" v-for="(row, rowIndex) in board" class="row">
+      <div id="shipBoard" v-for="(row, rowIndex) in shipBoard" class="row">
         <div v-for="(col, colIndex) in row" class="col">
           <div v-if="col === '~'">
             <button @click="placeShip(rowIndex, colIndex)"> O </button>
@@ -42,7 +42,6 @@
           <div v-else>
             {{col}}
           </div>
-
         </div>
       </div>
       <div class="col">
@@ -56,6 +55,20 @@
         <button @click="nextShip">Next Ship</button>
         <button @click="rotateShip">Rotate</button>
         <button @click="removeShip">Remove</button>
+      </div>
+
+      <div v-if="gameBegin">
+        <p>Select a button to shoot!</p>
+        <div id="fireBoard" v-for="(row, rowIndex) in fireBoard" class="row">
+          <div v-for="(col, colIndex) in row" class="col">
+            <div v-if="col === '~'">
+              <button @click="fireTorpedo(rowIndex, colIndex)"> O </button>
+            </div>
+            <div v-else>
+              {{col}}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

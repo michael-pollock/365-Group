@@ -13,7 +13,8 @@ img {
   height: 50px;
 }
 
-#board {
+#shipBoard,
+#fireBoard {
   width: 50%;
   margin-left: auto;
   margin-right: auto;

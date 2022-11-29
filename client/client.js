@@ -18,7 +18,8 @@ createApp({
       taunt: "Place your pieces.",
       rows: 9,
       cols: 6,
-      board: [],
+      shipBoard: [],
+      fireBoard: [],
       userId: null,
       usersList: null,
       carrier: { type: "Carrier", name: "Big-Hoss", id: "ca", size: 5, placed: false, sunk: false, hitCount: 0 },
@@ -31,6 +32,9 @@ createApp({
       shipIndex: 0,
       shipOrientation: "vertical",
       allShipsPlaced: false,
+      playerReady: false,
+      myTurn: false, // update from server
+      gameBegin: false, // update from server when both
     };
   },
   methods: {
@@ -40,11 +44,13 @@ createApp({
       for (i = 0; i <= this.rows; i++) {
         for (j = 0; j <= this.cols; j++) {
           if (i == 0 && j > 0) {
-            this.board[i][j] = xIndex;
+            this.shipBoard[i][j] = xIndex;
+            this.fireBoard[i][j] = xIndex;
             xIndex++;
           }
           if (i > 0 && j == 0) {
-            this.board[i][j] = yIndex;
+            this.shipBoard[i][j] = yIndex;
+            this.fireBoard[i][j] = yIndex;
             yIndex = this.getNextChar(yIndex);
           }
 
@@ -52,15 +58,20 @@ createApp({
       }
     },
     initBoard() {
-      let board = [];
+      let board1 = [];
+      let board2 = [];
       for (i = 0; i <= this.rows; i++) {
-        board.push([]);
+        board1.push([]);
+        board2.push([]);
         for (j = 0; j <= this.cols; j++) {
-          board[i].push("~");
+          board1[i].push("~");
+          board2[i].push("~");
         }
       }
-      board[0][0] = ' ';
-      this.board = board;
+      board1[0][0] = ' ';
+      board2[0][0] = ' ';
+      this.shipBoard = board1;
+      this.fireBoard = board2;
       this.fillBoard();
     },
     getNextChar(char) {
@@ -97,7 +108,7 @@ createApp({
     checkVerticalSpacing(rowIndex, colIndex) {
       openSpots = 0;
       currRow = rowIndex;
-      while (currRow <= this.rows && this.board[currRow][colIndex] == "~") {
+      while (currRow <= this.rows && this.shipBoard[currRow][colIndex] == "~") {
         openSpots++;
         if (openSpots == this.selectedShip.size) {
           this.placeShip(rowIndex, colIndex);
@@ -106,7 +117,7 @@ createApp({
         currRow++;
       }
       currRow = rowIndex - 1;
-      while (currRow > 0 && this.board[currRow][colIndex] == "~") {
+      while (currRow > 0 && this.shipBoard[currRow][colIndex] == "~") {
         openSpots++;
         if (openSpots == this.selectedShip.size) {
           this.placeShip(currRow, colIndex);
@@ -119,7 +130,7 @@ createApp({
     checkHorizontalSpacing(rowIndex, colIndex) {
       openSpots = 0;
       currCol = colIndex;
-      while (currCol <= this.cols && this.board[rowIndex][currCol] == "~") {
+      while (currCol <= this.cols && this.shipBoard[rowIndex][currCol] == "~") {
         openSpots++;
         if (openSpots == this.selectedShip.size) {
           this.placeShip(rowIndex, colIndex);
@@ -128,7 +139,7 @@ createApp({
         currCol++;
       }
       currCol = colIndex - 1;
-      while (currCol > 0 && this.board[rowIndex][currCol] == "~") {
+      while (currCol > 0 && this.shipBoard[rowIndex][currCol] == "~") {
         openSpots++;
         if (openSpots == this.selectedShip.size) {
           this.placeShip(rowIndex, currCol);
@@ -144,11 +155,11 @@ createApp({
       }
       if (this.shipOrientation == "vertical") {
         for (i = 0; i < this.selectedShip.size; i++) {
-          this.board[rowIndex + i][colIndex] = this.selectedShip.id;
+          this.shipBoard[rowIndex + i][colIndex] = this.selectedShip.id;
         }
       } else {
         for (i = 0; i < this.selectedShip.size; i++) {
-          this.board[rowIndex][colIndex + i] = this.selectedShip.id;
+          this.shipBoard[rowIndex][colIndex + i] = this.selectedShip.id;
         }
       }
       this.selectedShip.placed = true;
@@ -161,8 +172,8 @@ createApp({
     removeShip() {
       for (i = 1; i < this.rows; i++) {
         for (j = 1; j < this.cols; j++) {
-          if (this.board[i][j] == this.selectedShip.id) {
-            this.board[i][j] = "~";
+          if (this.shipBoard[i][j] == this.selectedShip.id) {
+            this.shipBoard[i][j] = "~";
           }
         }
       }
@@ -182,7 +193,13 @@ createApp({
       this.taunt = "You have placed all of your pieces. If they are where you want them, select 'Ready'";
     },
     setReady() {
-      console.log("Tell the server I am ready.");
+      console.log("Tell the server I am ready. Currently, manually setting game to begin.");
+      this.playerReady = true;
+      this.gameBegin = true; // this should be updated by server, just here for testing currently. 
+      socket.emit("ready", this.shipBoard, this.shipArray)
+    },
+    fireTorpedo(rowIndex, colIndex) {
+      console.log("Torpedo fired at row " + rowIndex + ", col " + colIndex);
     }
   },
   mounted() {
@@ -197,4 +214,9 @@ createApp({
       this.usersList = dataFromServer;
     });
   },
+  computed: {
+    findHitShip() {
+
+    }
+  }
 }).mount("#app");
