@@ -37,7 +37,7 @@
       <div id="shipBoard" v-for="(row, rowIndex) in shipBoard" class="row">
         <div v-for="(col, colIndex) in row" class="col">
           <div v-if="col === '~'">
-            <button @click="placeShip(rowIndex, colIndex)"> O </button>
+            <button @click="placeShip(rowIndex, colIndex)" v-bind:disabled="gameBegin"> O </button>
           </div>
           <div v-else>
             {{col}}
@@ -62,7 +62,8 @@
         <div id="fireBoard" v-for="(row, rowIndex) in fireBoard" class="row">
           <div v-for="(col, colIndex) in row" class="col">
             <div v-if="col === '~'">
-              <button @click="fireTorpedo(rowIndex, colIndex)"> O </button>
+              <button @click="fireTorpedo(rowIndex, colIndex)" v-bind:disabled="!yourTurn"> O
+              </button>
             </div>
             <div v-else>
               {{col}}
