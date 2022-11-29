@@ -43,6 +43,7 @@ createApp({
       cols: 6,
       shipBoard: [],
       fireBoard: [],
+      enemyBoard: [],
       userId: null,
       usersList: null,
       carrier: { type: "Carrier", name: "Big-Hoss", id: "ca", size: 5, placed: false, sunk: false, hitCount: 0 },
@@ -51,13 +52,15 @@ createApp({
       submarine: { type: "Submarine", name: "Silent-Whale", id: "sb", size: 3, placed: false, sunk: false, hitCount: 0 },
       destroyer: { type: "Destroyer", name: "Openheimer", id: "dr", size: 2, placed: false, sunk: false, hitCount: 0 }, //openheimer said i am become death destroyer of worlds
       shipArray: [],
+      enemyShips: [],
       selectedShip: "",
       shipIndex: 0,
       shipOrientation: "vertical",
       allShipsPlaced: false,
       playerReady: false,
-      myTurn: false, // update from server
+      yourTurn: true, // update from server
       gameBegin: false, // update from server when both
+      gameOver: false,
     };
   },
   methods: {
@@ -103,6 +106,10 @@ createApp({
     initShipArray() {
       this.shipArray = [this.carrier, this.battleship, this.cruiser, this.submarine, this.destroyer];
       this.selectedShip = this.shipArray[this.shipIndex];
+    },
+    initEnemyPieces() {
+      this.enemyBoard = this.shipBoard;
+      this.enemyShips = this.shipArray;
     },
     nextShip() {
       this.shipIndex = (this.shipIndex + 1) % this.shipArray.length; // prevents numbers above ship size
@@ -220,10 +227,56 @@ createApp({
       this.playerReady = true;
       this.gameBegin = true; // this should be updated by server, just here for testing currently. 
       socket.emit("ready", this.shipBoard, this.shipArray)
+      this.initEnemyPieces(); // sets enemy stuff to your stuff. tentative. 
     },
     fireTorpedo(rowIndex, colIndex) {
       console.log("Torpedo fired at row " + rowIndex + ", col " + colIndex);
-    }
+      if (this.enemyBoard[rowIndex][colIndex] !== '~') {
+        shipID = this.enemyBoard[rowIndex][colIndex];
+        enemyShip = this.getEnemyShip(shipID);
+        if (enemyShip == "?") {
+          console.log("Couldn't find that one.");
+          return;
+        }
+        enemyShip.hitCount++;
+        if (enemyShip.hitCount == enemyShip.size) {
+          enemyShip.sunk = true;
+          console.log("You sunk their " + enemyShip.name);
+          console.log(enemyShip);
+          console.log("They had " + this.enemyShips.length + " ships.")
+          this.enemyShips.splice(enemyShip, 1);
+          console.log("But now they only have " + this.enemyShips.length);
+          this.checkGameOver();
+        }
+        console.log("HIT!");
+        this.enemyBoard[rowIndex][colIndex] = '!X!';
+        this.fireBoard[rowIndex][colIndex] = '!X!';
+
+      } else {
+        console.log("Bummer, missed.");
+        this.enemyBoard[rowIndex][colIndex] = ':)';
+        this.fireBoard[rowIndex][colIndex] = ':(';
+      }
+    },
+    getEnemyShip(id) {
+      console.log(this.enemyShips);
+      console.log("Looking for " + id);
+      for (i = 0; i < this.enemyShips.length; i++) {
+        if (this.enemyShips[i].id == id) {
+          console.log("Found " + this.enemyShips[i].id);
+          return this.enemyShips[i];
+        }
+      }
+
+      return "?";
+    },
+    checkGameOver() {
+      if (this.enemyShips.length == 0) {
+        this.taunt = "YOU WIN";
+        this.gameOver = true;
+        this.yourTurn = false;
+      }
+    },
   },
   mounted() {
     this.initShipArray();
@@ -237,9 +290,4 @@ createApp({
       this.usersList = dataFromServer;
     });
   },
-  computed: {
-    findHitShip() {
-
-    }
-  }
 }).mount("#app");
