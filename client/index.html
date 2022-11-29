@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -19,16 +20,14 @@
 </head>
 
 <body>
+  <div class="chatbox">
+    <div id="message-container"> </div>
+    <form id="send-container">
+      <input type="text" id="message-input">
+      <button type="submit" id="send-button"> Send </button>
+    </form>
+  </div>
   <div id="app">
-    <div id="message-area">
-      <h2>Chat Box</h2>
-      <label for="user-input">Send Message:</label>
-      <input type="text" />
-      <div id="user-chat">
-        <h3>Logged in as {{userId}}</h3>
-        <p id="userchatbox" v-for="user in usersList">{{user}}</p>
-      </div>
-    </div>
     <div class="container">
       {{taunt}}
       <div v-if="allShipsPlaced == true">
@@ -57,6 +56,7 @@
         <button @click="removeShip">Remove</button>
       </div>
 
+
       <div v-if="gameBegin">
         <p>Select a button to shoot!</p>
         <div id="fireBoard" v-for="(row, rowIndex) in fireBoard" class="row">
@@ -72,6 +72,8 @@
       </div>
     </div>
   </div>
+ </div>
+  <script src="client.js"></script>
 </body>
 
 </html>
