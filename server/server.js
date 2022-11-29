@@ -4,15 +4,14 @@ const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const PORT = process.env.PORT || 4876;
-
-require("dotenv").config();
+const PORT = 4876;
 
 app.use(express.static("client"));
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
+
 
 let numOfClients = 0;
 let users = {};
@@ -41,6 +40,7 @@ server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
 
+
 function updateUserList() {
   let ret = [];
   for (i in users) ret.push(users[i]);
@@ -50,3 +50,4 @@ function updateUserList() {
 function randomUserId() {
   return Math.floor(Math.random() * 100);
 }
+
