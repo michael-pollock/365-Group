@@ -241,20 +241,13 @@ createApp({
         "Tell the server I am ready. Currently, manually setting game to begin."
       );
       this.playerReady = true;
-<<<<<<< HEAD
       this.gameBegin = true; // this should be updated by server, just here for testing currently.
       socket.emit("ready", this.shipBoard, this.shipArray);
+      this.initEnemyPieces(); // sets enemy stuff to your stuff. tentative.
     },
     fireTorpedo(rowIndex, colIndex) {
       console.log("Torpedo fired at row " + rowIndex + ", col " + colIndex);
-=======
-      this.gameBegin = true; // this should be updated by server, just here for testing currently. 
-      socket.emit("ready", this.shipBoard, this.shipArray)
-      this.initEnemyPieces(); // sets enemy stuff to your stuff. tentative. 
-    },
-    fireTorpedo(rowIndex, colIndex) {
-      console.log("Torpedo fired at row " + rowIndex + ", col " + colIndex);
-      if (this.enemyBoard[rowIndex][colIndex] !== '~') {
+      if (this.enemyBoard[rowIndex][colIndex] !== "~") {
         shipID = this.enemyBoard[rowIndex][colIndex];
         enemyShip = this.getEnemyShip(shipID);
         if (enemyShip == "?") {
@@ -266,19 +259,18 @@ createApp({
           enemyShip.sunk = true;
           console.log("You sunk their " + enemyShip.name);
           console.log(enemyShip);
-          console.log("They had " + this.enemyShips.length + " ships.")
+          console.log("They had " + this.enemyShips.length + " ships.");
           this.enemyShips.splice(enemyShip, 1);
           console.log("But now they only have " + this.enemyShips.length);
           this.checkGameOver();
         }
         console.log("HIT!");
-        this.enemyBoard[rowIndex][colIndex] = '!X!';
-        this.fireBoard[rowIndex][colIndex] = '!X!';
-
+        this.enemyBoard[rowIndex][colIndex] = "!X!";
+        this.fireBoard[rowIndex][colIndex] = "!X!";
       } else {
         console.log("Bummer, missed.");
-        this.enemyBoard[rowIndex][colIndex] = ':)';
-        this.fireBoard[rowIndex][colIndex] = ':(';
+        this.enemyBoard[rowIndex][colIndex] = ":)";
+        this.fireBoard[rowIndex][colIndex] = ":(";
       }
     },
     getEnemyShip(id) {
@@ -299,7 +291,6 @@ createApp({
         this.gameOver = true;
         this.yourTurn = false;
       }
->>>>>>> 1d31cd26fd9a3bf82d85210bd00e4b717eec61ad
     },
   },
   mounted() {
@@ -314,10 +305,4 @@ createApp({
       this.usersList = dataFromServer;
     });
   },
-<<<<<<< HEAD
-  computed: {
-    findHitShip() {},
-  },
-=======
->>>>>>> 1d31cd26fd9a3bf82d85210bd00e4b717eec61ad
 }).mount("#app");
