@@ -1,0 +1,2 @@
+A player can connect to player 0 1 and -1 in one browser 
+    -possible fix is on the client side
