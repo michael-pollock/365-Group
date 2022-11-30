@@ -44,7 +44,7 @@ io.on("connection", function (socket) {
     console.log(`Player ${playerIndex} disconnected`);
     playerConnections[playerIndex] = null;
 
-    socket.broadcast.emit("player-connection", playerIndex);
+    socket.broadcast.emit("player-connected", playerIndex);
   });
 });
 
