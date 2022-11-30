@@ -1,7 +1,5 @@
 const { createApp } = Vue;
 
-var socket = io();
-
 createApp({
   data() {
     return {
@@ -11,8 +9,6 @@ createApp({
       shipBoard: [],
       fireBoard: [],
       enemyBoard: [],
-      userId: null,
-      usersList: null,
       carrier: {
         type: "Carrier",
         name: "Big-Hoss",
@@ -58,6 +54,12 @@ createApp({
         sunk: false,
         hitCount: 0,
       }, //openheimer said i am become death destroyer of worlds
+      userId: null,
+      usersList: null,
+      message: "",
+      playerNumber: 0,
+      gameMode: "",
+      currentPlayer: "user",
       shipArray: [],
       enemyShips: [],
       selectedShip: "",
@@ -65,9 +67,11 @@ createApp({
       shipOrientation: "vertical",
       allShipsPlaced: false,
       playerReady: false,
+      enemyReady: false,
       yourTurn: true, // update from server
       gameBegin: false, // update from server when both
       gameOver: false,
+      playerList: [],
     };
   },
   methods: {
@@ -292,17 +296,39 @@ createApp({
         this.yourTurn = false;
       }
     },
+    startMultiPlayer() {
+      this.gameMode = "multiPlayer";
+      const socket = io();
+      socket.on("player-num", (dataFromServer) => {
+        this.playerNumber = parseInt(dataFromServer);
+        this.playerList.push(this.playerNumber);
+        if (this.playerNumber === 1) {
+          this.currentPlayer = "enemy";
+        }
+        console.log(this.playerNumber);
+      });
+
+      socket.on("player-connected", (dataFromServer) => {
+        console.log(
+          `Player number ${dataFromServer} connected or disconnected`
+        );
+      });
+    },
+    startSinglePlayer() {
+      this.gameMode = "singlePlayer";
+    },
+  },
+  computed: {
+    extraPlayer() {
+      if (this.playerNumber === -1) {
+        this.message = "The server is full please wait...";
+        this.playerList.splice(this.playerNumber, 1);
+      }
+      return this.message;
+    },
   },
   mounted() {
     this.initShipArray();
     this.initBoard();
-    socket.on("sendUserId", (dataFromServer) => {
-      console.log(dataFromServer);
-      this.userId = dataFromServer;
-    });
-    socket.on("sendUsersList", (dataFromServer) => {
-      console.log(dataFromServer);
-      this.usersList = dataFromServer;
-    });
   },
 }).mount("#app");
