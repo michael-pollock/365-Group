@@ -6,6 +6,7 @@ createApp({
       taunt: "Place your pieces.",
       rows: 9,
       cols: 6,
+      isButtonDisabled: false,
       shipBoard: [],
       fireBoard: [],
       enemyBoard: [],
@@ -54,8 +55,6 @@ createApp({
         sunk: false,
         hitCount: 0,
       }, //openheimer said i am become death destroyer of worlds
-      userId: null,
-      usersList: null,
       message: "",
       playerNumber: 0,
       gameMode: "",
@@ -72,6 +71,7 @@ createApp({
       gameBegin: false, // update from server when both
       gameOver: false,
       playerList: [],
+      isPlayerConnected: false,
     };
   },
   methods: {
@@ -241,6 +241,7 @@ createApp({
         "You have placed all of your pieces. If they are where you want them, select 'Ready'";
     },
     setReady() {
+      const socket = io();
       console.log(
         "Tell the server I am ready. Currently, manually setting game to begin."
       );
@@ -294,12 +295,16 @@ createApp({
         this.taunt = "YOU WIN";
         this.gameOver = true;
         this.yourTurn = false;
+        if (this.gameOver) {
+          this.isPlayerConnected = false;
+        }
       }
     },
     startMultiPlayer() {
       this.gameMode = "multiPlayer";
+      this.isPlayerConnected = true;
       const socket = io();
-      socket.on("player-num", (dataFromServer) => {
+      socket.on("player-num", dataFromServer => {
         this.playerNumber = parseInt(dataFromServer);
         this.playerList.push(this.playerNumber);
         if (this.playerNumber === 1) {
@@ -308,14 +313,11 @@ createApp({
         console.log(this.playerNumber);
       });
 
-      socket.on("player-connected", (dataFromServer) => {
+      socket.on("player-connected", dataFromServer => {
         console.log(
           `Player number ${dataFromServer} connected or disconnected`
         );
       });
-    },
-    startSinglePlayer() {
-      this.gameMode = "singlePlayer";
     },
   },
   computed: {
