@@ -143,12 +143,10 @@ createApp({
         this.shipOrientation = "vertical";
       }
     },
-    placeShip(rowIndex, colIndex) {
-      this.legalPlacement(rowIndex, colIndex);
-    },
-    legalPlacement(rowIndex, colIndex) {
+    checkPlacement(rowIndex, colIndex) {
       if (this.shipOrientation == "vertical") {
         this.checkVerticalSpacing(rowIndex, colIndex);
+        return;
       }
       this.checkHorizontalSpacing(rowIndex, colIndex);
     },
@@ -241,6 +239,7 @@ createApp({
         "You have placed all of your pieces. If they are where you want them, select 'Ready'";
     },
     setReady() {
+      const socket = io();
       console.log(
         "Tell the server I am ready. Currently, manually setting game to begin."
       );
@@ -253,8 +252,9 @@ createApp({
       console.log("Torpedo fired at row " + rowIndex + ", col " + colIndex);
       if (this.enemyBoard[rowIndex][colIndex] !== "~") {
         shipID = this.enemyBoard[rowIndex][colIndex];
-        enemyShip = this.getEnemyShip(shipID);
-        if (enemyShip == "?") {
+        enemyShipIndex = this.getEnemyShip(shipID);
+        enemyShip = this.enemyShips[enemyShipIndex];
+        if (enemyShipIndex == "-1") {
           console.log("Couldn't find that one.");
           return;
         }
@@ -262,9 +262,8 @@ createApp({
         if (enemyShip.hitCount == enemyShip.size) {
           enemyShip.sunk = true;
           console.log("You sunk their " + enemyShip.name);
-          console.log(enemyShip);
           console.log("They had " + this.enemyShips.length + " ships.");
-          this.enemyShips.splice(enemyShip, 1);
+          this.enemyShips.splice(enemyShipIndex, 1);
           console.log("But now they only have " + this.enemyShips.length);
           this.checkGameOver();
         }
@@ -276,18 +275,16 @@ createApp({
         this.enemyBoard[rowIndex][colIndex] = ":)";
         this.fireBoard[rowIndex][colIndex] = ":(";
       }
+      for (ship of this.enemyShips) {
+        console.log("ID: " + ship.id + ", Size: " + ship.size + ", Hits: " + ship.hitCount + ", Sunk: " + ship.sunk);
+      }
     },
     getEnemyShip(id) {
-      console.log(this.enemyShips);
       console.log("Looking for " + id);
-      for (i = 0; i < this.enemyShips.length; i++) {
-        if (this.enemyShips[i].id == id) {
-          console.log("Found " + this.enemyShips[i].id);
-          return this.enemyShips[i];
-        }
-      }
-
-      return "?";
+      isSameID = (ship) => ship.id == id;
+      shipIndex = this.enemyShips.findIndex(isSameID);
+      console.log("Index for " + this.enemyShips[shipIndex].name + " was " + shipIndex);
+      return shipIndex;
     },
     checkGameOver() {
       if (this.enemyShips.length == 0) {
