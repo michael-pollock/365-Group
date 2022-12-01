@@ -30,8 +30,7 @@
       <div id="user-chat">
       </div>
     </div>
-    <button @click="startMultiPlayer" class="playerButtons">Start MultiPlayer</button>
-    <button @click="startSinglePlayer" class="playerButtons">Start SinglePlayer</button>
+      <button @click="startMultiPlayer" class="playerButtons" :disabled="isPlayerConnected">Start MultiPlayer</button>
     <div class="container">
       {{taunt}}
       <div v-if="allShipsPlaced == true">
