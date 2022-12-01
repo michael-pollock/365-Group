@@ -21,15 +21,15 @@
 <body>
   <div id="app">
     <div id="message-area">
-        <h2>Chat Box</h2>
-        <h3>Logged in as Player</h3>
-        <span>{{extraPlayer}}</span>
-        <p id="userchatbox" v-for="player in playerList">{{player}}</p>
-        <label for="message-input">Send Message:</label>
-        <input type="text" />
-        <div id="user-chat">
-        </div>
+      <h2>Chat Box</h2>
+      <h3>Logged in as Player</h3>
+      <span>{{extraPlayer}}</span>
+      <p id="userchatbox" v-for="player in playerList">{{player}}</p>
+      <label for="message-input">Send Message:</label>
+      <input type="text" />
+      <div id="user-chat">
       </div>
+    </div>
       <button @click="startMultiPlayer" class="playerButtons" :disabled="isPlayerConnected">Start MultiPlayer</button>
     <div class="container">
       {{taunt}}
@@ -39,7 +39,7 @@
       <div id="shipBoard" v-for="(row, rowIndex) in shipBoard" class="row">
         <div v-for="(col, colIndex) in row" class="col">
           <div v-if="col === '~'">
-            <button @click="placeShip(rowIndex, colIndex)" v-bind:disabled="gameBegin"> O </button>
+            <button @click="checkPlacement(rowIndex, colIndex)" v-bind:disabled="gameBegin"> O </button>
           </div>
           <div v-else>
             {{col}}
@@ -52,11 +52,25 @@
         <p>Placed: {{selectedShip.placed}}</p>
         <p>All ships placed: {{allShipsPlaced}}</p>
       </div>
+      <div class="row">
+        <div class="col-sm-auto">
+          <button @click="prevShip">Previous Ship</button>
+        </div>
+        <div class="col-sm-auto">
+          <button @click="nextShip">Next Ship</button>
+        </div>
+        <div class="col-sm-auto">
+          <button @click="rotateShip">Rotate</button>
+        </div>
+        <div class="col-sm-auto">
+          <button @click="removeShip">Remove</button>
+        </div>
+      </div>
       <div class="col">
-        <button @click="prevShip">Previous Ship</button>
-        <button @click="nextShip">Next Ship</button>
-        <button @click="rotateShip">Rotate</button>
-        <button @click="removeShip">Remove</button>
+
+
+
+
       </div>
 
 
@@ -76,7 +90,7 @@
       </div>
     </div>
   </div>
- </div>
+  </div>
   <script src="client.js"></script>
 </body>
 
