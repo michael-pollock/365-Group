@@ -236,7 +236,7 @@ createApp({
       }
       this.allShipsPlaced = true;
       this.taunt =
-        "You have placed all of your pieces. If they are where you want them, select 'Ready'";
+        "You have placed all of your ships. If they are where you want them, select 'Ready'";
     },
     setReady() {
       const socket = io();
@@ -315,6 +315,10 @@ createApp({
         );
       });
     },
+  },
+  sendBoardToClient() {
+    socket = io();
+    socket.emit("playerBoard", this.shipBoard);
   },
   computed: {
     extraPlayer() {
