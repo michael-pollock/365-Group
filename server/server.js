@@ -13,10 +13,6 @@ app.get("/", (req, res) => {
 });
 
 let users = {};
-let player1Ships = [];
-let player1Board = [];
-let player2Ships = [];
-let player2Board = [];
 
 const playerConnections = [null, null];
 
