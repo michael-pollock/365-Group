@@ -14,45 +14,32 @@ app.get("/", (req, res) => {
 
 let users = {};
 
-let player1 = {
-  connected: null,
-  ships: [],
-  board: []
-}
+// connected is an array of client socket.ids
+// use fifo queue
+// when client connects push to end of the array
+// when client disconnects grab/splice from the array
 
-let player2 = {
-  connected: null,
-  ships: [],
-  board: []
-}
+const players = [];
+let username = "";
 
-const playerConnections = [player1, player2];
-
-io.on("connection", function (socket) {
-  let playerIndex = -1;
-  for (const i in playerConnections) {
-    if (playerConnections[i] === null) {
-      playerIndex = i;
-      break;
-    }
-  }
-
-  socket.emit("player-num", playerIndex);
-  console.log(`Player ${playerIndex} connected`);
-
-  if (playerIndex === -1) {
-    return;
-  }
-
-  playerConnections[playerIndex] = false;
-
-  socket.broadcast.emit("player-connected", playerIndex);
+io.on("connection", socket => {
+  let connectionCount = socket.conn.server.clientsCount;
+  socket.on("username-received", dataFromClient => {
+    username = dataFromClient;
+    let player = {
+      id: socket.id,
+      userName: username,
+    };
+    players.push(player);
+    console.log(players);
+    socket.emit("playerUserName", player.userName);
+    socket.emit("playerid", player.id);
+  });
 
   socket.on("disconnect", function () {
-    console.log(`Player ${playerIndex} disconnected`);
-    playerConnections[playerIndex] = null;
-
-    socket.broadcast.emit("player-connected", playerIndex);
+    let id = socket.id;
+    console.log(`Player ${id} has disconnected`);
+    delete players[id];
   });
 });
 

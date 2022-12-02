@@ -3,6 +3,7 @@ const { createApp } = Vue;
 createApp({
   data() {
     return {
+      username: null,
       taunt: "Place your pieces.",
       rows: 9,
       cols: 6,
@@ -276,14 +277,25 @@ createApp({
         this.fireBoard[rowIndex][colIndex] = ":(";
       }
       for (ship of this.enemyShips) {
-        console.log("ID: " + ship.id + ", Size: " + ship.size + ", Hits: " + ship.hitCount + ", Sunk: " + ship.sunk);
+        console.log(
+          "ID: " +
+            ship.id +
+            ", Size: " +
+            ship.size +
+            ", Hits: " +
+            ship.hitCount +
+            ", Sunk: " +
+            ship.sunk
+        );
       }
     },
     getEnemyShip(id) {
       console.log("Looking for " + id);
-      isSameID = (ship) => ship.id == id;
+      isSameID = ship => ship.id == id;
       shipIndex = this.enemyShips.findIndex(isSameID);
-      console.log("Index for " + this.enemyShips[shipIndex].name + " was " + shipIndex);
+      console.log(
+        "Index for " + this.enemyShips[shipIndex].name + " was " + shipIndex
+      );
       return shipIndex;
     },
     checkGameOver() {
@@ -300,19 +312,21 @@ createApp({
       this.gameMode = "multiPlayer";
       this.isPlayerConnected = true;
       const socket = io();
-      socket.on("player-num", dataFromServer => {
-        this.playerNumber = parseInt(dataFromServer);
-        this.playerList.push(this.playerNumber);
-        if (this.playerNumber === 1) {
-          this.currentPlayer = "enemy";
-        }
-        console.log(this.playerNumber);
+      socket.emit("username-received", this.username);
+      socket.on("playerUserName", dataFromServer => {
+        let username = dataFromServer;
+        this.username = username;
+        console.log(username);
+        console.log(this.username);
+        this.playerList.push(this.username);
       });
 
-      socket.on("player-connected", dataFromServer => {
-        console.log(
-          `Player number ${dataFromServer} connected or disconnected`
-        );
+      socket.on("playerid", dataFromServer => {
+        let pm = dataFromServer;
+        this.playerNumber = pm;
+        console.log(pm);
+        console.log(this.playerNumber);
+        this.playerList.push(this.playerNumber);
       });
     },
   },
