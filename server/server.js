@@ -19,27 +19,30 @@ let users = {};
 // when client connects push to end of the array
 // when client disconnects grab/splice from the array
 
-const players = [];
-let username = "";
+const players = {};
 
 io.on("connection", socket => {
-  let connectionCount = socket.conn.server.clientsCount;
-  socket.on("username-received", dataFromClient => {
-    username = dataFromClient;
-    let player = {
-      id: socket.id,
-      userName: username,
-    };
-    players.push(player);
-    console.log(players);
-    socket.emit("playerUserName", player.userName);
-    socket.emit("playerid", player.id);
+  socket.on("username-received", username => {
+    players[socket.id] = username;
+    console.log(`Player ${username} has connected`);
+    socket.emit("playerUserName", username);
+  });
+
+  socket.on("usermessage-received", message => {
+    let id = socket.id;
+    let user = players[id];
+    console.log(`Message received from client ${user} ${message}`);
+    io.emit("chat-message", {
+      message: message,
+      name: players[socket.id],
+    });
   });
 
   socket.on("disconnect", function () {
     let id = socket.id;
-    console.log(`Player ${id} has disconnected`);
-    delete players[id];
+    let user = players[id];
+    console.log(`Player ${user} has disconnected`);
+    delete user;
   });
 });
 

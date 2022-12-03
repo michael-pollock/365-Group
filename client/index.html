@@ -24,14 +24,16 @@
       <h2>Chat Box</h2>
       <label for="user">Enter a name:</label>
       <input type="text" v-model="username">
-      <h3>Logged in as Player</h3>
-      <span>{{extraPlayer}}</span>
-      <p id="userchatbox" v-for="player in playerList">{{player}}</p>
-      <label for="message-input">Send Message:</label>
-      <input type="text" />
-      <div id="user-chat">
+      <div id="player-box" v-for="player in playerList">
+        <h3>Logged in as Player {{player}}</h3>
       </div>
+      <ul id="user-chat-box" >
+        <li v-for="message in messageList">{{message.name}} : {{message.message}}</li>
+      </ul>
+      <label for="message-input" >Send Message:</label>
+      <input type="text" v-model="usermessage"/>
     </div>
+    <button @click.prevent="sendMessage" class="playerButtons">Send Message</button>
     <button @click="startMultiPlayer" class="playerButtons" :disabled="isPlayerConnected">Start MultiPlayer</button>
     <div class="container">
       {{taunt}}

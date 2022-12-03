@@ -62,3 +62,14 @@ img {
   color: whitesmoke;
   font-weight: bold;
 }
+
+#user-chat-box {
+  height: 100px;
+  max-width: 600px;
+  overflow-y: scroll;
+  padding-right: 20px;
+}
+
+#user-chat-box li {
+  list-style-type: none;
+}

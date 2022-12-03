@@ -1,4 +1,5 @@
 const { createApp } = Vue;
+const socket = io();
 
 createApp({
   data() {
@@ -11,6 +12,7 @@ createApp({
       shipBoard: [],
       fireBoard: [],
       enemyBoard: [],
+      messageList: [],
       carrier: {
         type: "Carrier",
         name: "Big-Hoss",
@@ -57,7 +59,8 @@ createApp({
         hitCount: 0,
       }, //openheimer said i am become death destroyer of worlds
       message: "",
-      playerNumber: 0,
+      usermessage: "",
+      playerId: 0,
       gameMode: "",
       currentPlayer: "user",
       shipArray: [],
@@ -311,39 +314,27 @@ createApp({
     startMultiPlayer() {
       this.gameMode = "multiPlayer";
       this.isPlayerConnected = true;
-      const socket = io();
       socket.emit("username-received", this.username);
       socket.on("playerUserName", dataFromServer => {
         let username = dataFromServer;
         this.username = username;
+        this.playerList.push(username);
         console.log(username);
         console.log(this.username);
-        this.playerList.push(this.username);
-      });
-
-      socket.on("playerid", dataFromServer => {
-        let pm = dataFromServer;
-        this.playerNumber = pm;
-        console.log(pm);
-        console.log(this.playerNumber);
-        this.playerList.push(this.playerNumber);
       });
     },
-  },
-  sendBoardToClient() {
-    socket = io();
-    socket.emit("playerBoard", this.shipBoard);
-  },
-  computed: {
-    extraPlayer() {
-      if (this.playerNumber === -1) {
-        this.message = "The server is full please wait...";
-        this.playerList.splice(this.playerNumber, 1);
-      }
-      return this.message;
+    sendMessage() {
+      //this.messageList.push(this.usermessage);
+      socket.emit("usermessage-received", this.usermessage);
+      this.usermessage = "";
     },
   },
+  computed: {},
   mounted() {
+    socket.on("chat-message", data => {
+      console.log(data);
+      this.messageList.push(data);
+    });
     this.initShipArray();
     this.initBoard();
   },
