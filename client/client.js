@@ -5,6 +5,8 @@ createApp({
   data() {
     return {
       username: null,
+      userNameErrorMsg: null,
+      userMsgError: null,
       taunt: "Place your pieces.",
       rows: 9,
       cols: 6,
@@ -315,21 +317,35 @@ createApp({
       this.gameMode = "multiPlayer";
       this.isPlayerConnected = true;
       socket.emit("username-received", this.username);
+      this.username = "";
       socket.on("playerUserName", dataFromServer => {
         let username = dataFromServer;
-        this.username = username;
         this.playerList.push(username);
-        console.log(username);
-        console.log(this.username);
+        // console.log(username);
+        // console.log(this.username);
       });
     },
     sendMessage() {
-      //this.messageList.push(this.usermessage);
       socket.emit("usermessage-received", this.usermessage);
       this.usermessage = "";
     },
   },
-  computed: {},
+  computed: {
+    errorUserNameInput() {
+      if (!this.username && !this.isPlayerConnected) {
+        let message = (this.userNameErrorMsg =
+          "Please fill in a name then click Start Multiplayer Button when ready!");
+        return message;
+      }
+    },
+    errorMsgInput() {
+      if (!this.isPlayerConnected || !this.usermessage) {
+        let message = (this.userMsgError =
+          "Message Can't be empty then fill in then click Send Message Button when ready!");
+        return message;
+      }
+    },
+  },
   mounted() {
     socket.on("chat-message", data => {
       console.log(data);

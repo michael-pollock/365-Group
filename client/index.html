@@ -20,21 +20,23 @@
 
 <body>
   <div id="app">
-    <div id="message-area">
-      <h2>Chat Box</h2>
-      <label for="user">Enter a name:</label>
-      <input type="text" v-model="username">
-      <div id="player-box" v-for="player in playerList">
-        <h3>Logged in as Player {{player}}</h3>
+      <div id="message-area">
+        <h2>Chat Box</h2>
+        <label for="user">Enter a name:</label>
+        <input type="text" v-model="username">
+        <h6 v-if="errorUserNameInput">{{userNameErrorMsg}}</h6>
+        <div id="player-box" v-for="player in playerList">
+          <h3>Logged in as Player {{player}}</h3>
+        </div>
+        <ul id="user-chat-box" >
+          <li v-for="message in messageList">{{message.name}} : {{message.message}}</li>
+        </ul>
+        <label for="message-input" >Send Message:</label>
+        <input type="text" v-model="usermessage"/>
+        <h6 v-if="errorMsgInput">{{userMsgError}}</h6>
       </div>
-      <ul id="user-chat-box" >
-        <li v-for="message in messageList">{{message.name}} : {{message.message}}</li>
-      </ul>
-      <label for="message-input" >Send Message:</label>
-      <input type="text" v-model="usermessage"/>
-    </div>
-    <button @click.prevent="sendMessage" class="playerButtons">Send Message</button>
-    <button @click="startMultiPlayer" class="playerButtons" :disabled="isPlayerConnected">Start MultiPlayer</button>
+      <button @click="sendMessage" v-if="!errorMsgInput" class="playerButtons">Send Message</button>
+      <button @click="startMultiPlayer" v-if="!errorUserNameInput" class="playerButtons" :disabled="isPlayerConnected">Start Multiplayer</button>
     <div class="container">
       {{taunt}}
       <div v-if="allShipsPlaced == true">
