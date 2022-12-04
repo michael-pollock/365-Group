@@ -332,7 +332,10 @@ createApp({
   },
   computed: {
     errorUserNameInput() {
-      if (!this.username && !this.isPlayerConnected) {
+      if (
+        (!this.username || !this.username.match("^[A-Za-z][A-Za-z0-9]*$")) &&
+        !this.isPlayerConnected
+      ) {
         let message = (this.userNameErrorMsg =
           "Please fill in a name then click Start Multiplayer Button when ready!");
         return message;

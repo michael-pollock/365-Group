@@ -23,7 +23,7 @@
       <div id="message-area">
         <h2>Chat Box</h2>
         <label for="user">Enter a name:</label>
-        <input type="text" v-model="username">
+        <input type="text" v-model="username" pattern="^[A-Za-z][A-Za-z0-9]*$">
         <h6 v-if="errorUserNameInput">{{userNameErrorMsg}}</h6>
         <div id="player-box" v-for="player in playerList">
           <h3>Logged in as Player {{player}}</h3>

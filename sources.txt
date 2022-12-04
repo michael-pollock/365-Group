@@ -1,0 +1,2 @@
+used https://stackoverflow.com/questions/2842823/how-to-prevent-white-spaces-in-a-regular-expression-regex-validation
+for input whitespace validation for username on client 
