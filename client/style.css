@@ -22,6 +22,10 @@ img {
   background-color: #2b65e3;
 }
 
+#taunt {
+  margin: 15px;
+}
+
 #message-area {
   flex-direction: column;
   display: flex;

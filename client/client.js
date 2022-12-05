@@ -8,8 +8,8 @@ createApp({
       userNameErrorMsg: null,
       userMsgError: null,
       taunt: "Place your pieces.",
-      rows: 9,
-      cols: 6,
+      rows: 10,
+      cols: 10,
       isButtonDisabled: false,
       shipBoard: [],
       fireBoard: [],
@@ -253,6 +253,7 @@ createApp({
       this.gameBegin = true; // this should be updated by server, just here for testing currently.
       socket.emit("ready", this.shipBoard, this.shipArray);
       this.initEnemyPieces(); // sets enemy stuff to your stuff. tentative.
+      this.taunt = "COMMENCE FIRING";
     },
     fireTorpedo(rowIndex, colIndex) {
       console.log("Torpedo fired at row " + rowIndex + ", col " + colIndex);
@@ -284,13 +285,13 @@ createApp({
       for (ship of this.enemyShips) {
         console.log(
           "ID: " +
-            ship.id +
-            ", Size: " +
-            ship.size +
-            ", Hits: " +
-            ship.hitCount +
-            ", Sunk: " +
-            ship.sunk
+          ship.id +
+          ", Size: " +
+          ship.size +
+          ", Hits: " +
+          ship.hitCount +
+          ", Sunk: " +
+          ship.sunk
         );
       }
     },

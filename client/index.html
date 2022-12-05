@@ -20,70 +20,70 @@
 
 <body>
   <div id="app">
-      <div id="message-area">
-        <h2>Chat Box</h2>
-        <label for="user">Enter a name:</label>
-        <input type="text" v-model="username" pattern="^[A-Za-z][A-Za-z0-9]*$">
-        <h6 v-if="errorUserNameInput">{{userNameErrorMsg}}</h6>
-        <div id="player-box" v-for="player in playerList">
-          <h3>Logged in as Player {{player}}</h3>
-        </div>
-        <ul id="user-chat-box" >
-          <li v-for="message in messageList">{{message.name}} : {{message.message}}</li>
-        </ul>
-        <label for="message-input" >Send Message:</label>
-        <input type="text" v-model="usermessage"/>
-        <h6 v-if="errorMsgInput">{{userMsgError}}</h6>
+    <div id="message-area">
+      <h2>Chat Box</h2>
+      <label for="user">Enter a name:</label>
+      <input type="text" v-model="username" pattern="^[A-Za-z][A-Za-z0-9]*$">
+      <h6 v-if="errorUserNameInput">{{userNameErrorMsg}}</h6>
+      <div id="player-box" v-for="player in playerList">
+        <h3>Logged in as Player {{player}}</h3>
       </div>
-      <button @click="sendMessage" v-if="!errorMsgInput" class="playerButtons">Send Message</button>
-      <button @click="startMultiPlayer" v-if="!errorUserNameInput" class="playerButtons" :disabled="isPlayerConnected">Start Multiplayer</button>
+      <ul id="user-chat-box">
+        <li v-for="message in messageList">{{message.name}} : {{message.message}}</li>
+      </ul>
+      <label for="message-input">Send Message:</label>
+      <input type="text" v-model="usermessage" />
+      <h6 v-if="errorMsgInput">{{userMsgError}}</h6>
+    </div>
+    <button @click="sendMessage" v-if="!errorMsgInput" class="playerButtons">Send Message</button>
+    <button @click="startMultiPlayer" v-if="!errorUserNameInput" class="playerButtons"
+      :disabled="isPlayerConnected">Start Multiplayer</button>
     <div class="container">
-      {{taunt}}
-      <div v-if="allShipsPlaced == true">
-        <div v-if="!gameBegin">
-          <button @click="setReady">Ready</button>
-        </div>
-      </div>
-      <div id="shipBoard" v-for="(row, rowIndex) in shipBoard" class="row">
-        <div v-for="(col, colIndex) in row" class="col">
-          <div v-if="col === '~'">
-            <button @click="checkPlacement(rowIndex, colIndex)" v-bind:disabled="gameBegin"> O </button>
-          </div>
-          <div v-else>
-            {{col}}
+      <div class="row justify-content-center" id="taunt">
+        {{taunt}}
+        <div v-if="allShipsPlaced == true">
+          <div v-if="!gameBegin">
+            <button @click="setReady">Ready</button>
           </div>
         </div>
       </div>
-      <div class="col">
-        <p>Selected Ship: {{selectedShip.type}}, {{selectedShip.name}} </p>
-        <p>Ship orientation: {{shipOrientation}}</p>
-        <p>Placed: {{selectedShip.placed}}</p>
-        <p>All ships placed: {{allShipsPlaced}}</p>
+
+      <div v-if="!gameBegin">
+        <!-- while not on server, hide board after selecting ready. -->
+
+        <div id="shipBoard" v-for="(row, rowIndex) in shipBoard" class="row">
+          <div v-for="(col, colIndex) in row" class="col">
+            <div v-if="col === '~'">
+              <button @click="checkPlacement(rowIndex, colIndex)" v-bind:disabled="gameBegin"> O </button>
+            </div>
+            <div v-else>
+              {{col}}
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <p>Selected Ship: {{selectedShip.type}}, {{selectedShip.name}} </p>
+          <p>Ship orientation: {{shipOrientation}}</p>
+          <p>Placed: {{selectedShip.placed}}</p>
+          <p>All ships placed: {{allShipsPlaced}}</p>
+        </div>
+        <div class="row">
+          <div class="col-sm-auto">
+            <button @click="prevShip">Previous Ship</button>
+          </div>
+          <div class="col-sm-auto">
+            <button @click="nextShip">Next Ship</button>
+          </div>
+          <div class="col-sm-auto">
+            <button @click="rotateShip">Rotate</button>
+          </div>
+          <div class="col-sm-auto">
+            <button @click="removeShip">Remove</button>
+          </div>
+        </div>
       </div>
-      <div class="row">
-        <div class="col-sm-auto">
-          <button @click="prevShip">Previous Ship</button>
-        </div>
-        <div class="col-sm-auto">
-          <button @click="nextShip">Next Ship</button>
-        </div>
-        <div class="col-sm-auto">
-          <button @click="rotateShip">Rotate</button>
-        </div>
-        <div class="col-sm-auto">
-          <button @click="removeShip">Remove</button>
-        </div>
-      </div>
-      <div class="col">
-
-
-
-
-      </div>
-
 
       <div v-if="gameBegin">
-        <p>Select a button to shoot!</p>
         <div id="fireBoard" v-for="(row, rowIndex) in fireBoard" class="row">
           <div v-for="(col, colIndex) in row" class="col">
             <div v-if="col === '~'">
