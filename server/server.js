@@ -14,34 +14,53 @@ app.get("/", (req, res) => {
 
 let users = {};
 
-// connected is an array of client socket.ids
-// use fifo queue
-// when client connects push to end of the array
-// when client disconnects grab/splice from the array
-
 const players = {};
 let readiedPlayers = 0;
 
-io.on("connection", socket => {
+const playerConnections = [null, null];
 
+io.on("connection", socket => {
   socket.on("playerReady", (shipBoard, ships) => {
-    players['id'] = socket.id;
-    readiedPlayers++;
-    players['playerNum'] = readiedPlayers;
-    players['shipBoard'] = shipBoard;
-    players['ships'] = ships;
-    console.log("Readied players: " + readiedPlayers);
-    if (readiedPlayers == 2) {
-      io.emit("begin", true);
+    let playerIndex = -1;
+    for (const i in playerConnections) {
+      if (playerConnections[i] == null) {
+        playerIndex = i;
+        break;
+      }
     }
-    io.sockets.socket(socket.id).emit("playerNum", readiedPlayers);
+
+    socket.emit("playerNum", playerIndex);
+
+    if (playerIndex == -1) {
+      return;
+    }
+    playerConnections[playerIndex] = false;
+    readiedPlayers++;
+    console.log("Readied players: " + readiedPlayers);
+    if (playerIndex == -1) {
+      socket.emit("begin", false);
+    } else {
+      socket.emit("begin", true);
+    }
+
+    players["id"] = socket.id;
+    players["playerNum"] = playerIndex;
+    players["shipBoard"] = shipBoard;
+    players["ships"] = ships;
+  });
+
+  socket.on("disconnect", () => {
+    let id = socket.id;
+    let user = players[id];
+    player[id] = null;
+    console.log(`Player ${user} has disconnected`);
+    delete user;
   });
 
   socket.on("username-received", username => {
-    players['name'] = username;
+    players[socket.id] = username;
     console.log(`Player ${username} has connected`);
     socket.emit("playerUserName", username);
-    console.log("Printing players name: \n" + players['name']);
   });
 
   socket.on("usermessage-received", message => {
@@ -53,16 +72,8 @@ io.on("connection", socket => {
       name: players[socket.id],
     });
   });
-
-  socket.on("disconnect", function () {
-    let id = socket.id;
-    let user = players[id];
-    console.log(`Player ${user} has disconnected`);
-    delete user;
-  });
 });
 
 server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
-

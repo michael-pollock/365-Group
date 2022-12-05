@@ -34,6 +34,7 @@
       <label for="message-input">Send Message:</label>
       <input type="text" v-model="usermessage" />
       <h6 v-if="errorMsgInput">{{userMsgError}}</h6>
+      <h6 v-if="serverIsFull">{{serverFullMessage}}</h6>
     </div>
     <button @click="sendMessage" v-if="!errorMsgInput" class="playerButtons">Send Message</button>
     <button @click="startMultiPlayer" v-if="!errorUserNameInput" class="playerButtons"

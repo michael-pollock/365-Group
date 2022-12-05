@@ -78,7 +78,8 @@ createApp({
       gameOver: false,
       playerList: [],
       isPlayerConnected: false,
-      playerNum: -1,
+      playerNum: 0,
+      serverFullMessage: null,
     };
   },
   methods: {
@@ -242,14 +243,8 @@ createApp({
         "You have placed all of your ships. If they are where you want them, select 'Ready'";
     },
     setReady() {
-      const socket = io();
-      console.log(
-        "Tell the server I am ready. Currently, manually setting game to begin."
-      );
       this.playerReady = true;
-      //this.gameBegin = true; // this should be updated by server, just here for testing currently.
       socket.emit("playerReady", this.shipBoard, this.shipArray);
-      this.taunt = "COMMENCE FIRING";
     },
     fireTorpedo(rowIndex, colIndex) {
       console.log("Torpedo fired at row " + rowIndex + ", col " + colIndex);
@@ -281,13 +276,13 @@ createApp({
       for (ship of this.enemyShips) {
         console.log(
           "ID: " +
-          ship.id +
-          ", Size: " +
-          ship.size +
-          ", Hits: " +
-          ship.hitCount +
-          ", Sunk: " +
-          ship.sunk
+            ship.id +
+            ", Size: " +
+            ship.size +
+            ", Hits: " +
+            ship.hitCount +
+            ", Sunk: " +
+            ship.sunk
         );
       }
     },
@@ -318,8 +313,6 @@ createApp({
       socket.on("playerUserName", dataFromServer => {
         let username = dataFromServer;
         this.playerList.push(username);
-        // console.log(username);
-        // console.log(this.username);
       });
     },
     sendMessage() {
@@ -345,33 +338,51 @@ createApp({
         return message;
       }
     },
+    serverIsFull() {
+      if (this.playerNum == -1 && this.isPlayerConnected) {
+        let message = "Server is full please wait...";
+        this.serverFullMessage = message;
+        return this.serverFullMessage;
+      }
+    },
   },
   mounted() {
     this.initShipArray();
     this.initBoard();
-    socket.on("playerNum", (playerNum) => {
-      this.playerNum = playerNum;
-      this.taunt = "You are player num " + playerNum;
+    socket.on("playerNum", playerNum => {
+      this.playerNum = parseInt(playerNum);
+      if (this.playerNum == 0) {
+        this.currentPlayer = "user";
+        this.taunt =
+          "You are player num " + playerNum + "\r\n" + "COMMENCE FIRING";
+      }
+      if (this.playerNum == 1) {
+        this.currentPlayer = "enemy";
+        this.taunt =
+          "You are player num " + playerNum + "\r\n" + "COMMENCE FIRING";
+      }
+      if (this.playerNum == -1) {
+        this.taunt = "You Can't Fire You're in a queue of players waiting";
+      }
     });
-    socket.on("begin", (begin) => {
+    socket.on("begin", begin => {
       this.gameBegin = begin;
     });
-    socket.on("receiveBoard", (enemyBoard) => {
+    socket.on("receiveBoard", enemyBoard => {
       this.enemyBoard = enemyBoard;
     });
-    socket.on("receiveShips", (enemyShips) => {
+    socket.on("receiveShips", enemyShips => {
       this.enemyShips = enemyShips;
-    })
+    });
     socket.on("sendMove", (row, col) => {
       this.fireTorpedo(row, col);
     });
-    socket.on("gameOver", (gameOver) => {
+    socket.on("gameOver", gameOver => {
       this.gameOver = gameOver;
-    })
+    });
     socket.on("chat-message", data => {
       console.log(data);
       this.messageList.push(data);
     });
-
   },
 }).mount("#app");
