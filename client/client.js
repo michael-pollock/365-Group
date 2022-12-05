@@ -78,6 +78,7 @@ createApp({
       gameOver: false,
       playerList: [],
       isPlayerConnected: false,
+      playerNum: -1,
     };
   },
   methods: {
@@ -128,10 +129,6 @@ createApp({
         this.destroyer,
       ];
       this.selectedShip = this.shipArray[this.shipIndex];
-    },
-    initEnemyPieces() {
-      this.enemyBoard = this.shipBoard;
-      this.enemyShips = this.shipArray;
     },
     nextShip() {
       this.shipIndex = (this.shipIndex + 1) % this.shipArray.length; // prevents numbers above ship size
@@ -250,9 +247,8 @@ createApp({
         "Tell the server I am ready. Currently, manually setting game to begin."
       );
       this.playerReady = true;
-      this.gameBegin = true; // this should be updated by server, just here for testing currently.
-      socket.emit("ready", this.shipBoard, this.shipArray);
-      this.initEnemyPieces(); // sets enemy stuff to your stuff. tentative.
+      //this.gameBegin = true; // this should be updated by server, just here for testing currently.
+      socket.emit("playerReady", this.shipBoard, this.shipArray);
       this.taunt = "COMMENCE FIRING";
     },
     fireTorpedo(rowIndex, colIndex) {
@@ -351,11 +347,31 @@ createApp({
     },
   },
   mounted() {
+    this.initShipArray();
+    this.initBoard();
+    socket.on("playerNum", (playerNum) => {
+      this.playerNum = playerNum;
+      this.taunt = "You are player num " + playerNum;
+    });
+    socket.on("begin", (begin) => {
+      this.gameBegin = begin;
+    });
+    socket.on("receiveBoard", (enemyBoard) => {
+      this.enemyBoard = enemyBoard;
+    });
+    socket.on("receiveShips", (enemyShips) => {
+      this.enemyShips = enemyShips;
+    })
+    socket.on("sendMove", (row, col) => {
+      this.fireTorpedo(row, col);
+    });
+    socket.on("gameOver", (gameOver) => {
+      this.gameOver = gameOver;
+    })
     socket.on("chat-message", data => {
       console.log(data);
       this.messageList.push(data);
     });
-    this.initShipArray();
-    this.initBoard();
+
   },
 }).mount("#app");

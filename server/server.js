@@ -20,12 +20,28 @@ let users = {};
 // when client disconnects grab/splice from the array
 
 const players = {};
+let readiedPlayers = 0;
 
 io.on("connection", socket => {
+
+  socket.on("playerReady", (shipBoard, ships) => {
+    players['id'] = socket.id;
+    readiedPlayers++;
+    players['playerNum'] = readiedPlayers;
+    players['shipBoard'] = shipBoard;
+    players['ships'] = ships;
+    console.log("Readied players: " + readiedPlayers);
+    if (readiedPlayers == 2) {
+      io.emit("begin", true);
+    }
+    io.sockets.socket(socket.id).emit("playerNum", readiedPlayers);
+  });
+
   socket.on("username-received", username => {
-    players[socket.id] = username;
+    players['name'] = username;
     console.log(`Player ${username} has connected`);
     socket.emit("playerUserName", username);
+    console.log("Printing players name: \n" + players['name']);
   });
 
   socket.on("usermessage-received", message => {
@@ -49,3 +65,4 @@ io.on("connection", socket => {
 server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
+

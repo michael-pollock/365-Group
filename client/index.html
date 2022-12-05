@@ -26,7 +26,7 @@
       <input type="text" v-model="username" pattern="^[A-Za-z][A-Za-z0-9]*$">
       <h6 v-if="errorUserNameInput">{{userNameErrorMsg}}</h6>
       <div id="player-box" v-for="player in playerList">
-        <h3>Logged in as Player {{player}}</h3>
+        <h3>Logged in as Player {{player}}, number: {{playerNum}}</h3>
       </div>
       <ul id="user-chat-box">
         <li v-for="message in messageList">{{message.name}} : {{message.message}}</li>
