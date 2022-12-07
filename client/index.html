@@ -37,8 +37,8 @@
       <h6 v-if="serverIsFull">{{serverFullMessage}}</h6>
     </div>
     <button @click="sendMessage" v-if="!errorMsgInput" class="playerButtons">Send Message</button>
-    <button @click="startMultiPlayer" v-if="!errorUserNameInput" class="playerButtons"
-      :disabled="isPlayerConnected">Start Multiplayer</button>
+    <button @click="startMultiPlayer" v-if="!errorUserNameInput" class="playerButtons":disabled="isPlayerConnected">Start Multiplayer</button>
+      
     <div class="container">
       <div class="row justify-content-center" id="taunt">
         {{taunt}}
@@ -57,7 +57,7 @@
         <div id="shipBoard" v-for="(row, rowIndex) in shipBoard" class="row">
           <div v-for="(col, colIndex) in row" class="col">
             <div v-if="col === '~'">
-              <button @click="checkPlacement(rowIndex, colIndex)" v-bind:disabled="gameBegin"> O </button>
+              <button @click="checkPlacement(rowIndex, colIndex)" v-bind:disabled="gameBegin" ><img src="wave.jpeg" alt="wave" class="buttonWaves"></button>
             </div>
             <div v-else>
               {{col}}
@@ -90,7 +90,7 @@
         <div id="fireBoard" v-for="(row, rowIndex) in fireBoard" class="row">
           <div v-for="(col, colIndex) in row" class="col">
             <div v-if="col === '~'">
-              <button @click="fireAtEnemy(rowIndex, colIndex)" v-bind:disabled="!yourTurn"> O
+              <button @click="fireAtEnemy(rowIndex, colIndex)" v-bind:disabled="!yourTurn"> <img src="wave.jpeg" alt="wave" class="buttonWaves">
               </button>
             </div>
             <div v-else>
