@@ -80,6 +80,7 @@ createApp({
       isPlayerConnected: false,
       playerNum: 0,
       serverFullMessage: null,
+      waiting: false,
     };
   },
   methods: {
@@ -244,62 +245,65 @@ createApp({
     },
     setReady() {
       this.playerReady = true;
+      this.waiting = true;
       socket.emit("playerReady", this.shipBoard, this.shipArray);
+    },
+    fireAtEnemy(rowIndex, colIndex) {
+      socket.emit("fireTorpedo", rowIndex, colIndex);
+      this.checkGameOver();
     },
     fireTorpedo(rowIndex, colIndex) {
       console.log("Torpedo fired at row " + rowIndex + ", col " + colIndex);
-      if (this.enemyBoard[rowIndex][colIndex] !== "~") {
-        shipID = this.enemyBoard[rowIndex][colIndex];
-        enemyShipIndex = this.getEnemyShip(shipID);
-        enemyShip = this.enemyShips[enemyShipIndex];
-        if (enemyShipIndex == "-1") {
+      if (this.shipBoard[rowIndex][colIndex] !== "~") {
+        shipID = this.shipBoard[rowIndex][colIndex];
+        shipIndex = this.getShip(shipID);
+        ship = this.shipArray[shipIndex];
+        if (shipIndex == "-1") {
           console.log("Couldn't find that one.");
           return;
         }
-        enemyShip.hitCount++;
-        if (enemyShip.hitCount == enemyShip.size) {
-          enemyShip.sunk = true;
-          console.log("You sunk their " + enemyShip.name);
-          console.log("They had " + this.enemyShips.length + " ships.");
-          this.enemyShips.splice(enemyShipIndex, 1);
-          console.log("But now they only have " + this.enemyShips.length);
-          this.checkGameOver();
+        ship.hitCount++;
+        if (ship.hitCount == ship.size) {
+          ship.sunk = true;
+          console.log("Sunk: " + ship.name);
+          console.log("You had " + this.shipArray.length + " ships.");
+          this.shipArray.splice(shipIndex, 1);
+          console.log("But now you have " + this.shipArray.length);
         }
         console.log("HIT!");
-        this.enemyBoard[rowIndex][colIndex] = "!X!";
-        this.fireBoard[rowIndex][colIndex] = "!X!";
+        this.shipBoard[rowIndex][colIndex] = "!X!";
+        socket.emit("shipHit", rowIndex, colIndex);
       } else {
-        console.log("Bummer, missed.");
-        this.enemyBoard[rowIndex][colIndex] = ":)";
-        this.fireBoard[rowIndex][colIndex] = ":(";
+        console.log("They missed!");
+        this.shipBoard[rowIndex][colIndex] = ":)";
+        socket.emit("shipMiss", rowIndex, colIndex);
       }
-      for (ship of this.enemyShips) {
+      for (aShip of this.shipArray) {
         console.log(
           "ID: " +
-            ship.id +
+            aShip.id +
             ", Size: " +
-            ship.size +
+            aShip.size +
             ", Hits: " +
-            ship.hitCount +
+            aShip.hitCount +
             ", Sunk: " +
-            ship.sunk
+            aShip.sunk
         );
       }
     },
-    getEnemyShip(id) {
+    getShip(id) {
       console.log("Looking for " + id);
       isSameID = ship => ship.id == id;
-      shipIndex = this.enemyShips.findIndex(isSameID);
+      shipIndex = this.shipArray.findIndex(isSameID);
       console.log(
-        "Index for " + this.enemyShips[shipIndex].name + " was " + shipIndex
+        "Index for " + this.shipArray[shipIndex].name + " was " + shipIndex
       );
       return shipIndex;
     },
     checkGameOver() {
-      if (this.enemyShips.length == 0) {
-        this.taunt = "YOU WIN";
-        this.gameOver = true;
-        this.yourTurn = false;
+      if (this.shipArray.length == 0) {
+        this.taunt = "YOU Lose!";
+        socket.emit("allShipsSunk");
         if (this.gameOver) {
           this.isPlayerConnected = false;
         }
@@ -351,6 +355,7 @@ createApp({
     this.initBoard();
     socket.on("playerNum", playerNum => {
       this.playerNum = parseInt(playerNum);
+      console.log(`You are Player ${playerNum}`);
       if (this.playerNum == 0) {
         this.currentPlayer = "user";
         this.taunt =
@@ -362,27 +367,45 @@ createApp({
           "You are player num " + playerNum + "\r\n" + "COMMENCE FIRING";
       }
       if (this.playerNum == -1) {
+        this.currentPlayer = "waiting-user";
         this.taunt = "You Can't Fire You're in a queue of players waiting";
       }
     });
-    socket.on("begin", begin => {
+    socket.on("player-disconnect", dataFromServer => {
+      this.playerNum = parseInt(dataFromServer);
+      console.log(
+        `Player # ${this.playerNum} has disconnected from the server`
+      );
+    });
+    socket.on("begin", (begin, waiting) => {
+      console.log("Beginning game");
       this.gameBegin = begin;
+      this.waiting = waiting;
     });
-    socket.on("receiveBoard", enemyBoard => {
+    socket.on("sendEnemyData", (enemyBoard, enemyShips) => {
       this.enemyBoard = enemyBoard;
-    });
-    socket.on("receiveShips", enemyShips => {
       this.enemyShips = enemyShips;
+      console.log("Received enemy stuff");
     });
-    socket.on("sendMove", (row, col) => {
+    socket.on("receiveFire", (row, col) => {
+      console.log("Receiving fire at row: " + row + ", col " + col);
       this.fireTorpedo(row, col);
+      this.checkGameOver();
     });
-    socket.on("gameOver", gameOver => {
-      this.gameOver = gameOver;
+    socket.on("gameOver", () => {
+      console.log("gameOver");
+      this.gameOver = true;
+      this.yourTurn = false;
     });
     socket.on("chat-message", data => {
       console.log(data);
       this.messageList.push(data);
+    });
+    socket.on("shipHit", (row, col) => {
+      this.fireBoard[row][col] = "!X!";
+    });
+    socket.on("shipMiss", (row, col) => {
+      this.fireBoard[row][col] = ":(";
     });
   },
 }).mount("#app");

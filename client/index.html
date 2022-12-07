@@ -43,13 +43,15 @@
       <div class="row justify-content-center" id="taunt">
         {{taunt}}
         <div v-if="allShipsPlaced == true">
-          <div v-if="!gameBegin">
-            <button @click="setReady">Ready</button>
+          <div v-if="!waiting">
+            <div v-if="!gameBegin">
+              <button @click="setReady">Ready</button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div v-if="!gameBegin">
+      <div>
         <!-- while not on server, hide board after selecting ready. -->
 
         <div id="shipBoard" v-for="(row, rowIndex) in shipBoard" class="row">
@@ -88,7 +90,7 @@
         <div id="fireBoard" v-for="(row, rowIndex) in fireBoard" class="row">
           <div v-for="(col, colIndex) in row" class="col">
             <div v-if="col === '~'">
-              <button @click="fireTorpedo(rowIndex, colIndex)" v-bind:disabled="!yourTurn"> O
+              <button @click="fireAtEnemy(rowIndex, colIndex)" v-bind:disabled="!yourTurn"> O
               </button>
             </div>
             <div v-else>
