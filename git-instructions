@@ -1,6 +1,0 @@
-to start: git pull
-make whatever changes
-then: git add * (this adds all edited files)
-then: git status (shows you what changes you're about to make)
-then: git commit -m "whatever changes you made" 
-then: git push
