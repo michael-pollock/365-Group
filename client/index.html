@@ -57,7 +57,7 @@
         <div id="shipBoard" v-for="(row, rowIndex) in shipBoard" class="row">
           <div v-for="(col, colIndex) in row" class="col">
             <div v-if="col === '~'">
-              <button @click="checkPlacement(rowIndex, colIndex)" v-bind:disabled="gameBegin" ><img src="wave.jpeg" alt="wave" class="buttonWaves"></button>
+              <button @click="checkPlacement(rowIndex, colIndex)" v-bind:disabled="gameBegin" ></button>
             </div>
             <div v-else>
               {{col}}
@@ -90,7 +90,7 @@
         <div id="fireBoard" v-for="(row, rowIndex) in fireBoard" class="row">
           <div v-for="(col, colIndex) in row" class="col">
             <div v-if="col === '~'">
-              <button @click="fireAtEnemy(rowIndex, colIndex)" v-bind:disabled="!yourTurn"> <img src="wave.jpeg" alt="wave" class="buttonWaves">
+              <button @click="fireAtEnemy(rowIndex, colIndex)" v-bind:disabled="!yourTurn">
               </button>
             </div>
             <div v-else>
